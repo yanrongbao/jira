@@ -1,0 +1,50 @@
+import { useAuth } from "context/auth-context";
+import qs from "qs";
+import * as auth from "auth-provider";
+
+const apiUrl = process.env.REACT_APP_API_URL;
+
+interface Config extends RequestInit {
+  data?: object;
+  token?: string;
+}
+
+export const http = (
+  endPoint: string,
+  { data = {}, token, ...commonConfig }: Config = {}
+) => {
+  const config = {
+    method: "GET",
+    headers: {
+      Authorization: token ? `Bearer ${token}` : "",
+      "Content-type": data ? "application/json" : "",
+    },
+    ...commonConfig,
+  };
+  if (config.method.toUpperCase() === "POST") {
+    config.body = JSON.stringify(data);
+  } else {
+    endPoint += `?${qs.stringify(data)}`;
+  }
+  return window
+    .fetch(`${apiUrl}/${endPoint}`, config)
+    .then(async (response) => {
+      if (response.status === 401) {
+        await auth.logout();
+        window.location.reload();
+        return Promise.reject({ message: "请重新登录" });
+      }
+      const data = await response.json();
+      if (response.ok) {
+        return data;
+      } else {
+        return Promise.reject(data);
+      }
+    });
+};
+
+export const useHttp = () => {
+  const { user } = useAuth();
+  return (...[endPoint, config]: Parameters<typeof http>) =>
+    http(endPoint, { ...config, token: user?.token });
+};
