@@ -1,8 +1,10 @@
 import { User } from "../screens/project-list/search-panel";
-import React, { useState, ReactNode } from "react";
+import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
 import { http } from "utils/http";
 import { useMount } from "utils";
+import { useAsync } from "utils/useAsync";
+import { FullPageError, FullPageLoading } from "components/libs";
 
 interface AuthFrom {
   username: string;
@@ -34,16 +36,27 @@ AuthContext.displayName = "AuthContext";
 
 // 第二步：创建一个AuthProvider，将方法，熟悉赋值给value
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
-
+  const {
+    data: user,
+    isIdle,
+    isLoading,
+    error,
+    run,
+    setData: setUser,
+  } = useAsync<User | null>();
   const login = (form: AuthFrom) => auth.login(form).then(setUser);
   const register = (form: AuthFrom) => auth.register(form).then(setUser);
   const logout = () => auth.logout().then(() => setUser(null));
 
   useMount(() => {
-    bootstrapUser().then(setUser);
+    run(bootstrapUser());
   });
-
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+  if (error) {
+    return <FullPageError error={error} />;
+  }
   // return AuthContext
   return (
     <AuthContext.Provider
