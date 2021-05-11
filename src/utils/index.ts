@@ -57,3 +57,22 @@ export const useArray = <T>(array: T[]) => {
     removeIndex,
   };
 };
+
+export const useDocumentTitle = (
+  title: string,
+  keepOnMount: boolean = true
+) => {
+  const oldTitle = document.title;
+
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+
+  useEffect(() => {
+    return () => {
+      if (!keepOnMount) {
+        document.title = oldTitle;
+      }
+    };
+  }, []);
+};
