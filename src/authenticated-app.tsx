@@ -4,10 +4,11 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { useAuth } from "context/auth-context";
 import { ProjectListScreen } from "screens/project-list";
 import { ProjectScreen } from "screens/project-screen";
-import { Dropdown, Menu } from "antd";
+import { Button, Dropdown, Menu } from "antd";
 import styled from "@emotion/styled";
 import { Row } from "components/libs";
 import { ReactComponent as SoftwareLogo } from "assets/software-logo.svg";
+import { resetRoute } from "utils";
 
 export const AuthenticatedApp = () => {
   return (
@@ -21,6 +22,7 @@ export const AuthenticatedApp = () => {
               path={"/projects/:projectId/*"}
               element={<ProjectScreen />}
             />
+            <Navigate to={window.location.pathname + "/projects"} />
           </Routes>
         </Router>
       </Main>
@@ -33,7 +35,9 @@ const PageHeader = () => {
   return (
     <Header between>
       <HeaderLeft gap>
-        <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+        <Button type={"link"} onClick={resetRoute}>
+          <SoftwareLogo width={"18rem"} color={"rgb(38, 132, 255)"} />
+        </Button>
         <h2>项目</h2>
         <h2>用户</h2>
       </HeaderLeft>
