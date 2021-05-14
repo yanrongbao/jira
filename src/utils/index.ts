@@ -78,3 +78,16 @@ export const useDocumentTitle = (
 };
 
 export const resetRoute = () => (window.location.href = window.location.origin);
+
+export const useMountRef = () => {
+  const mounfRef = useRef(false);
+
+  useEffect(() => {
+    mounfRef.current = true;
+    return () => {
+      mounfRef.current = false;
+    };
+  });
+
+  return mounfRef;
+};
