@@ -3,12 +3,14 @@ import { SearchPanel } from "./search-panel";
 import { List } from "./list";
 import { useDebounce, useDocumentTitle } from "utils";
 import styled from "@emotion/styled";
-import { Typography } from "antd";
+import { Row, Typography, Button } from "antd";
 import { useProject } from "utils/project";
 import { useUsers } from "utils/users";
 import { useProjectSearchParams } from "./util";
 
-export const ProjectListScreen = () => {
+export const ProjectListScreen = (props: {
+  onProjectModalOpen: (isOpen: boolean) => void;
+}) => {
   useDocumentTitle("项目列表", false);
 
   const [param, setParams] = useProjectSearchParams();
@@ -18,7 +20,16 @@ export const ProjectListScreen = () => {
   const { data: users } = useUsers();
   return (
     <Container>
-      <h1>项目列表</h1>
+      <Row justify={"space-between"} align={"middle"}>
+        <h1 style={{ marginBottom: 0 }}>项目列表</h1>
+        <Button
+          onClick={() => {
+            props.onProjectModalOpen(true);
+          }}
+        >
+          创建项目
+        </Button>
+      </Row>
       <SearchPanel
         param={param}
         users={users || []}
@@ -32,6 +43,7 @@ export const ProjectListScreen = () => {
         dataSource={list || []}
         users={users || []}
         reFresh={retry}
+        onProjectModalOpen={props.onProjectModalOpen}
       ></List>
     </Container>
   );
