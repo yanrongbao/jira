@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useCallback } from "react";
 import { useAuth } from "context/auth-context";
 import qs from "qs";
 import * as auth from "auth-provider";
@@ -46,6 +46,9 @@ export const http = (
 
 export const useHttp = () => {
   const { user } = useAuth();
-  return (...[endPoint, config]: Parameters<typeof http>) =>
-    http(endPoint, { ...config, token: user?.token });
+  return useCallback(
+    (...[endPoint, config]: Parameters<typeof http>) =>
+      http(endPoint, { ...config, token: user?.token }),
+    [user?.token]
+  );
 };
