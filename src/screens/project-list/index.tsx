@@ -8,9 +8,7 @@ import { useProject } from "utils/project";
 import { useUsers } from "utils/users";
 import { useProjectSearchParams } from "./util";
 
-export const ProjectListScreen = (props: {
-  onProjectModalOpen: (isOpen: boolean) => void;
-}) => {
+export const ProjectListScreen = (props: { porjectButton: JSX.Element }) => {
   useDocumentTitle("项目列表", false);
 
   const [param, setParams] = useProjectSearchParams();
@@ -22,13 +20,7 @@ export const ProjectListScreen = (props: {
     <Container>
       <Row justify={"space-between"} align={"middle"}>
         <h1 style={{ marginBottom: 0 }}>项目列表</h1>
-        <Button
-          onClick={() => {
-            props.onProjectModalOpen(true);
-          }}
-        >
-          创建项目
-        </Button>
+        {props.porjectButton}
       </Row>
       <SearchPanel
         param={param}
@@ -43,7 +35,7 @@ export const ProjectListScreen = (props: {
         dataSource={list || []}
         users={users || []}
         reFresh={retry}
-        onProjectModalOpen={props.onProjectModalOpen}
+        porjectButton={props.porjectButton}
       ></List>
     </Container>
   );
