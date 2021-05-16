@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useReducer } from "react";
 import { useMountRef } from "utils";
 interface State<D> {
   error: Error | null;
@@ -13,37 +13,46 @@ const defaultInitialState: State<null> = {
 const defaultConfig = {
   throwOnError: false,
 };
+const useSafeDispatch = <T>(dispatch: (...args: T[]) => void) => {
+  const mountRef = useMountRef();
+  return useCallback(
+    (...args: T[]) => (mountRef.current ? dispatch(...args) : void 0),
+    [mountRef, dispatch]
+  );
+};
 export const useAsync = <D>(
   initialState?: State<D>,
   initialConfig?: typeof defaultConfig
 ) => {
   const config = { ...defaultConfig, ...initialConfig };
-  const [state, setState] = useState<State<D>>({
-    ...defaultInitialState,
-    ...initialState,
-  });
+  const [state, dispatch] = useReducer(
+    (state: State<D>, action: Partial<State<D>>) => ({ ...state, ...action }),
+    {
+      ...defaultInitialState,
+      ...initialState,
+    }
+  );
+  const safeDispatch = useSafeDispatch(dispatch);
   const [retry, setRetry] = useState(() => () => {});
-
-  const mountRef = useMountRef();
 
   const setData = useCallback(
     (data: D) =>
-      setState({
+      safeDispatch({
         data,
         stat: "success",
         error: null,
       }),
-    []
+    [safeDispatch]
   );
 
   const setError = useCallback(
     (error: Error) =>
-      setState({
+      safeDispatch({
         data: null,
         error,
         stat: "error",
       }),
-    []
+    [safeDispatch]
   );
 
   const run = useCallback(
@@ -61,12 +70,10 @@ export const useAsync = <D>(
           run(runConfig?.retry(), runConfig);
         }
       });
-      setState((prevState) => ({ ...prevState, stat: "loading" }));
+      safeDispatch({ stat: "loading" });
       return promise
         .then((data) => {
-          if (mountRef.current) {
-            setData(data);
-          }
+          setData(data);
           return data;
         })
         .catch((error) => {
@@ -75,7 +82,7 @@ export const useAsync = <D>(
           return error;
         });
     },
-    [config.throwOnError, mountRef, setData, setError]
+    [config.throwOnError, safeDispatch, setData, setError]
   );
   return {
     isIdle: state.stat === "idle",
