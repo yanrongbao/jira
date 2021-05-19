@@ -4,7 +4,6 @@ import { URLSearchParamsInit, useSearchParams } from "react-router-dom";
 
 export const useUrlQueryParam = <K extends string>(keys: K[]) => {
   const [seaechParams, setSearchParams] = useSearchParams();
-  console.log(seaechParams.get("name"));
   return [
     useMemo(
       () =>

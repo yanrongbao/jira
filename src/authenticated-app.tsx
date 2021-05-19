@@ -84,11 +84,13 @@ const User = () => {
     <Dropdown
       overlay={
         <Menu>
-          <Menu.Item onClick={logout}>登出</Menu.Item>
+          <Menu.Item onClick={logout}>
+            <Button type={"link"}>登出</Button>
+          </Menu.Item>
         </Menu>
       }
     >
-      <a onClick={(e) => e.preventDefault()}>hi, {user?.name}</a>
+      <Button type={"link"}>hi, {user?.name}</Button>
     </Dropdown>
   );
 };

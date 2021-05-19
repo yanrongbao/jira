@@ -26,6 +26,7 @@ export const List = ({ users, reFresh, ...props }: ListProps) => {
     <Table
       {...props}
       pagination={false}
+      rowKey={"id"}
       columns={[
         {
           title: <Pin checked={true} disabled={true} />,

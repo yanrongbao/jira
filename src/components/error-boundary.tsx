@@ -1,4 +1,4 @@
-import React, { Component, PropsWithChildren, ReactNode } from "react";
+import { Component, PropsWithChildren, ReactNode } from "react";
 
 type FallbackCallback = (props: { error: Error | null }) => ReactNode;
 // react-error-boundary

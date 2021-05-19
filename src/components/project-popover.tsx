@@ -10,7 +10,7 @@ export const ProjectPopover = (props: { porjectButton: JSX.Element }) => {
       <Typography.Text type={"secondary"}>收藏项目</Typography.Text>
       <List>
         {pinnedProject?.map((project) => (
-          <List>
+          <List key={project.id}>
             <List.Item.Meta title={project.name} />
           </List>
         ))}
