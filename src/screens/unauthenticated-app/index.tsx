@@ -20,11 +20,11 @@ export const UnauthenticatedApp = () => {
           {error ? (
             <Typography.Text type={"danger"}>{error?.message}</Typography.Text>
           ) : null}
-          <Title>{isRegister ? "请登录" : "请注册"}</Title>
+          <Title>{isRegister ? "请注册" : "请登录"}</Title>
           {isRegister ? (
-            <LoginScreen onError={setError} />
-          ) : (
             <RegisterScreen onError={setError} />
+          ) : (
+            <LoginScreen onError={setError} />
           )}
           <Divider />
           <a onClick={() => setIsRegister(!isRegister)}>
