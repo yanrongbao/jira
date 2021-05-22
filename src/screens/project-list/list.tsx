@@ -21,8 +21,7 @@ interface ListProps extends TableProps<Project> {
 export const List = ({ users, reFresh, ...props }: ListProps) => {
   const { open } = useProjectModal();
   const { mutate } = useEditProject();
-  const pinProject = (id: number) => (pin: boolean) =>
-    mutate({ id, pin }).then(reFresh);
+  const pinProject = (id: number) => (pin: boolean) => mutate({ id, pin });
   return (
     <Table
       {...props}
