@@ -8,7 +8,7 @@ interface IdSelectProps
   value?: Row | undefined | null;
   defaultOptionName?: string;
   options?: { name: string; id: number }[];
-  onChange: (value?: number) => void;
+  onChange?: (value?: number) => void;
 }
 /**
  * value可以传入各种类型的值
@@ -24,7 +24,7 @@ export const IdSelect = (props: IdSelectProps) => {
     <Select
       value={options?.length ? toNumber(value) : 0}
       {...restProps}
-      onChange={(value) => onChange(toNumber(value) || undefined)}
+      onChange={(value) => onChange?.(toNumber(value) || undefined)}
     >
       {defaultOptionName ? (
         <Select.Option value={0}>{defaultOptionName}</Select.Option>

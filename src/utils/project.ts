@@ -31,7 +31,7 @@ export const useAddProject = () => {
   const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
-      client(`projects/${params.id}`, {
+      client(`projects`, {
         data: params,
         method: "POST",
       }),
@@ -39,6 +39,17 @@ export const useAddProject = () => {
       onSuccess: () => {
         queryClient.invalidateQueries("projects");
       },
+    }
+  );
+};
+
+export const useProjectId = (id?: number) => {
+  const client = useHttp();
+  return useQuery<Project>(
+    [`project`, { id }],
+    () => client(`projects/${id}`),
+    {
+      enabled: !!id,
     }
   );
 };
