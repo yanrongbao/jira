@@ -1,4 +1,4 @@
-import { User } from "../screens/project-list/search-panel";
+import { User } from "../type/User";
 import React, { ReactNode } from "react";
 import * as auth from "auth-provider";
 import { http } from "utils/http";
