@@ -1,6 +1,11 @@
+import {
+  useEditConfig,
+  useDeleteConfig,
+  useAddConfig,
+} from "./use-optimistic-options";
 import { Project } from "screens/project-list/list";
 import { useHttp } from "./http";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, QueryKey } from "react-query";
 
 export const useProject = (params?: Partial<Project>) => {
   const client = useHttp();
@@ -9,37 +14,27 @@ export const useProject = (params?: Partial<Project>) => {
   );
 };
 
-export const useEditProject = () => {
+export const useEditProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects/${params.id}`, {
         method: "PATCH",
         data: params,
       }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("projects");
-      },
-    }
+    useEditConfig(queryKey)
   );
 };
 
-export const useAddProject = () => {
+export const useAddProject = (queryKey: QueryKey) => {
   const client = useHttp();
-  const queryClient = useQueryClient();
   return useMutation(
     (params: Partial<Project>) =>
       client(`projects`, {
         data: params,
         method: "POST",
       }),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries("projects");
-      },
-    }
+    useAddConfig(queryKey)
   );
 };
 
@@ -51,5 +46,16 @@ export const useProjectId = (id?: number) => {
     {
       enabled: !!id,
     }
+  );
+};
+
+export const useDeleteProject = (queryKey: QueryKey) => {
+  const client = useHttp();
+  return useMutation(
+    ({ id }: { id: number }) =>
+      client(`projects/${id}`, {
+        method: "DELETE",
+      }),
+    useDeleteConfig(queryKey)
   );
 };
