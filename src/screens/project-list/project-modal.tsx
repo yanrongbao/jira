@@ -28,13 +28,17 @@ export const ProjectModal = () => {
     });
   };
   useEffect(() => {
-    form.resetFields();
     form.setFieldsValue(projectDetail);
   }, [projectDetail, form]);
+
+  const closeModal = () => {
+    form.resetFields();
+    close();
+  };
   return (
     <Drawer
       forceRender={true}
-      onClose={close}
+      onClose={closeModal}
       visible={projectModalOpen}
       width={"100%"}
     >
@@ -81,7 +85,7 @@ export const ProjectModal = () => {
           </>
         )}
       </Container>
-      <Button onClick={close}>关闭</Button>
+      <Button onClick={closeModal}>关闭</Button>
     </Drawer>
   );
 };
