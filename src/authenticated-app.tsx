@@ -13,7 +13,7 @@ import { resetRoute } from "utils";
 import { ProjectPopover } from "components/project-popover";
 import { UserPopover } from "components/user-popover";
 
-export const AuthenticatedApp = () => {
+const AuthenticatedApp = () => {
   return (
     <Container>
       <Router>
@@ -33,6 +33,7 @@ export const AuthenticatedApp = () => {
     </Container>
   );
 };
+export default AuthenticatedApp;
 
 const PageHeader = () => {
   return (

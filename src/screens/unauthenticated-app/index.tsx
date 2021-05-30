@@ -9,7 +9,7 @@ import right from "assets/right.svg";
 import { useDocumentTitle } from "utils";
 import { ErrorBox } from "components/libs";
 
-export const UnauthenticatedApp = () => {
+const UnauthenticatedApp = () => {
   const [isRegister, setIsRegister] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   useDocumentTitle("请登录注册已继续");
@@ -34,6 +34,7 @@ export const UnauthenticatedApp = () => {
     </Background>
   );
 };
+export default UnauthenticatedApp;
 
 export const LongButton = styled(Button)`
   width: 100%;
